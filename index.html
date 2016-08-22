@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <title>起きろ</title>
+    <!--<link rel="stylesheet" href="../test1/style.css" type="text/css">-->
+
+    <script>
+        var audio;
+        var i = 0; //振動の回数
+
+        function init() {
+            audio = document.getElementById("audio"); //"audio"というidの音声ファイルを定義
+            window.addEventListener("devicemotion", deviceMotion);
+        };
+
+        function wake() {
+            audio.play();
+        }
+
+        function deviceMotion(e) {
+            e.preventDefault();
+            var ac = e.acceleration;
+            document.getElementById("ac0").innerHTML = "X: " + ac.x; //x方向への加速度の大きさ
+            document.getElementById("ac1").innerHTML = "Y: " + ac.y; //y方向への加速度の大きさ
+            document.getElementById("ac2").innerHTML = "Z: " + ac.z; //z方向への加速度の大きさ
+            document.getElementById("i").innerHTML = "振動回数: " + i; //振動回数
+            if (Math.abs(ac.x > 10)) {
+                i++;
+            }
+            if (i > 30) {
+                audio.pause();
+                i = 0;
+            }
+        }
+    </script>
+</head>
+
+<body onload="init();">
+    <div id="wrapper">
+        <h1>デバイスの動き</h1>
+        <p class="status" id="i"></p>
+        <h2>各方向への加速度</h2>
+        <div id="motion">
+            <p class="status" id="ac0">X:</p>
+            <p class="status" id="ac1">Y:</p>
+            <p class="status" id="ac2">Z:</p>
+        </div>
+
+    </div>
+
+    <audio id="audio" loop="" preload="auto">
+        <source src="wakeup.mp3">
+    </audio>
+
+    <button onclick="wake();">開始</button>
+    <!--<input type="button" name="button" value="開始" onclick="wake();">-->
+    <p>デバイスを振って音を止めてください</p>
+</body>
+
+</html>
